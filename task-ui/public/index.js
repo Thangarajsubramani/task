@@ -2,7 +2,7 @@ var listElement = document.querySelector("#app ul");
 var inputElement = document.querySelector("#app input");
 var buttonElement = document.querySelector("#app button");
 
-var todos = JSON.parse(localStorage.getItem("list_todos")) || [];
+var todos = [];
 
 async function renderTodos() {
   let res = await fetch("/todos");
@@ -19,7 +19,7 @@ async function renderTodos() {
     linkElement.setAttribute("href", "#");
 
     var pos = todos.indexOf(todo);
-    linkElement.setAttribute("onclick", "deleteTodo(" + pos + ")");
+    linkElement.setAttribute("onclick", `deleteTodo("${todo._id}")`);
 
     var linkText = document.createTextNode("done");
 
@@ -33,23 +33,22 @@ async function renderTodos() {
 
 renderTodos();
 
-function addTodo() {
+async function addTodo() {
   var todoText = inputElement.value;
-
-  todos.push(todoText);
+  await fetch("/addtodo", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ title: todoText }),
+  });
   inputElement.value = "";
   renderTodos();
-  saveToStorage();
 }
 
 buttonElement.onclick = addTodo;
 
-function deleteTodo(pos) {
-  todos.splice(pos, 1);
+async function deleteTodo(id) {
+  await fetch(`/deletetodo/${id}`);
   renderTodos();
-  saveToStorage();
-}
-
-function saveToStorage() {
-  localStorage.setItem("list_todos", JSON.stringify(todos));
 }
