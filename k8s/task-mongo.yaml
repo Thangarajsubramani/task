@@ -16,7 +16,10 @@ spec:
     spec:
       containers:
         - name: task-mongo
-          image: mongo:latest
+          image: mongo
+          volumeMounts:
+            - name: mongo-persistent-storage
+              mountPath: /data/db
           env:
             - name: MONGO_INITDB_ROOT_USERNAME
               value: "admin"
@@ -26,6 +29,10 @@ spec:
               value: "todoapp"
           ports:
             - containerPort: 27017
+      volumes:
+        - name: mongo-persistent-storage
+          persistentVolumeClaim:
+            claimName: mongo-pvc
 
 ---
 apiVersion: v1
@@ -38,3 +45,4 @@ spec:
   ports:
     - port: 27017
       targetPort: 27017
+  type: ClusterIP

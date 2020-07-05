@@ -3,7 +3,7 @@ version: "3.7"
 services:
   mongodb:
     image: mongo:latest
-    container_name: task-mongodb
+    container_name: task-mongo
     networks:
       - my-net
     restart: always
@@ -17,8 +17,8 @@ services:
       - ./task-mongo/mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
 
   task-ui:
-    image: task-ui
-    container_name: task-ui-todo
+    image: ymamathadev/task-ui
+    container_name: task-ui
     networks:
       - my-net
     restart: always

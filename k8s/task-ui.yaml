@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: task-ui
+  labels:
+    app: task-ui
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: task-ui
+  template:
+    metadata:
+      labels:
+        app: task-ui
+    spec:
+      containers:
+        - name: task-ui
+          image: ymamathadev/task-ui
+          ports:
+            - containerPort: 8080
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: task-ui
+spec:
+  selector:
+    app: task-ui
+  ports:
+    - port: 8080
+  type: LoadBalancer
